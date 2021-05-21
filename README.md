@@ -15,7 +15,7 @@ This, instead of use a java keystore (jks) where we will have to manage it in or
 In this repository you will find the class com.sps.Tester, which basically loads Windows-Root keystore, and then calls https://www.google.com. 
 You can build and package the class using maven, and then just execute:
 
-```java -jar <nameOftheJar>```
+```java -jar Tester-1.0-SNAPSHOT.jar```
 
 And you will see an output like this:
 
