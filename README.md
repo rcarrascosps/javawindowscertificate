@@ -1,4 +1,4 @@
-# Java Windows Certifcate Store Integration
+# Java Windows Certificate Store Integration
 
 The java class com.sps.Tester shows how to use Windows Certificate Store within a Java Class in order to consume a Service using HTTPs.
 
