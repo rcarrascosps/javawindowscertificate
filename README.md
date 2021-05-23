@@ -13,7 +13,18 @@ by a PKI and:
 This, instead of use a java keystore (jks) where we will have to manage it in order to make the previous listed actions. 
 
 In this repository you will find the class com.sps.Tester, which basically loads Windows-Root keystore, and then calls https://www.google.com. 
+
+In line 30 and 31 we are loading Windows Certificate Store:
+
+```
+        KeyStore ks = KeyStore.getInstance("WINDOWS-ROOT");
+        ks.load(null, null);
+```
+
+**WINDOWS-ROOT** is the name of the certificate store. And we are actually listing its contents while executing the class.
+
 You can build and package the class using maven, and then just execute:
+
 
 ```java -jar Tester-1.0-SNAPSHOT.jar```
 
