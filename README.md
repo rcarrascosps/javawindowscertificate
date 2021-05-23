@@ -14,7 +14,7 @@ This, instead of use a java keystore (jks) where we will have to manage it in or
 
 In this repository you will find the class com.sps.Tester, which basically loads Windows-Root keystore, and then calls https://www.google.com. 
 
-In line 30 and 31 we are loading Windows Certificate Store:
+In line 30 and 31 (com.sps.Tester) we are loading Windows Certificate Store:
 
 ```
         KeyStore ks = KeyStore.getInstance("WINDOWS-ROOT");
@@ -94,7 +94,7 @@ Mensaje de respuesta: OK. HTTP Response Code: 200
 Content-Type: text/html; charset="utf-8"
 ```
 
-It will print all the alias that it the keystore includes, and then the response code from making a GET to https://www.google.com
+It will print all the alias that the keystore includes, and then the response code from making a GET to https://www.google.com
 
 
 
