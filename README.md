@@ -31,8 +31,6 @@ In order to manage your certificates you can do it via MMC.
 
 ![MMC ](imgs/mmc.jpg)
 
-**WINDOWS-ROOT** is the name of the certificate store. And we are actually listing its contents while executing the class.
-
 You can build and package the class using maven, and then just execute:
 
 
