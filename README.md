@@ -17,9 +17,19 @@ In this repository you will find the class com.sps.Tester, which basically loads
 In line 30 and 31 (com.sps.Tester) we are loading Windows Certificate Store:
 
 ```
-        KeyStore ks = KeyStore.getInstance("WINDOWS-ROOT");
+        KeyStore ks = KeyStore.getInstance("WINDOWS-MY");
         ks.load(null, null);
 ```
+
+There are two options you can use to load Windows Certificate Store:
+- WINDOWS-ROOT: this one all the CA certificates
+- WINDOWS-MY: this loads your trusted certificates.
+
+In this test case scenario, we are using both of them and you can switch in the code.
+
+In order to manage your certificates you can do it via MMC. 
+
+![MMC ](imgs/mmc.jpg)
 
 **WINDOWS-ROOT** is the name of the certificate store. And we are actually listing its contents while executing the class.
 
