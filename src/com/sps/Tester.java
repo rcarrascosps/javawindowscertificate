@@ -1,13 +1,16 @@
 package com.sps;
 
 import com.sps.ws.client.SampleServiceService;
+
 import java.net.URL;
 
 import java.security.KeyStore;
 
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 import java.util.Enumeration;
@@ -49,11 +52,12 @@ public class Tester {
             Certificate c = truststore.getCertificate(aliasKey);
             System.out.println("---> alias : " + aliasKey);
             Date certExpiryDate = ((X509Certificate) c).getNotAfter();
-            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");            
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date today = new Date();
             long dateDiff = certExpiryDate.getTime() - today.getTime();
             long expiresIn = dateDiff / (24 * 60 * 60 * 1000);
-            System.out.println("\t\t\t Fecha de expiracion:" + ft.format(certExpiryDate) +  "\tExpira en: " + expiresIn +" Dias");
+            System.out.println("\t\t\t Fecha de expiracion:" + ft.format(certExpiryDate) + "\tExpira en: " + expiresIn +
+                               " Dias");
 
             if (truststore.isKeyEntry(aliasKey)) {
                 Certificate[] chain = truststore.getCertificateChain(aliasKey);
@@ -68,14 +72,14 @@ public class Tester {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(truststore);
 
-        // Establecemos la conexiï¿½n TLS hacia el servicio
+        // Establecemos la conexi�n TLS hacia el servicio
         SSLContext context = SSLContext.getInstance("TLS");
         TrustManager[] trustManagers = tmf.getTrustManagers();
         context.init(keyManagers, trustManagers, null);
         SSLSocketFactory sf = context.getSocketFactory();
         //URL url = new URL("https://www.google.com");
-        URL url = new URL("https://www.facebook.com");
-        //URL url = new URL("https://oke.rcarrascogb.com:8084/auth");
+        //URL url = new URL("https://www.facebook.com");
+        URL url = new URL("https://localhost:7002/mvnjaxws-0.0.1-SNAPSHOT/SampleServiceService?WSDL");
 
         HttpsURLConnection httpsCon = (HttpsURLConnection) url.openConnection();
         httpsCon.setSSLSocketFactory(sf);
@@ -88,21 +92,24 @@ public class Tester {
                 System.out.print((char) ch);
               inStrm.close();
             }*/
-        System.out.println("Mensaje de respuesta: " + httpsCon.getResponseMessage() + ". HTTP Response Code: " + httpsCon.getResponseCode());
+        System.out.println("Mensaje de respuesta: " + httpsCon.getResponseMessage() + ". HTTP Response Code: " +
+                           httpsCon.getResponseCode());
         System.out.println("Content-Type: " + httpsCon.getHeaderField("Content-Type"));
         //Invocacion al WS.
         HttpsURLConnection.setDefaultSSLSocketFactory(sf);
-        //se aisla validacion de nombre de server 
-		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-  			new javax.net.ssl.HostnameVerifier(){
+        //se aisla validacion de nombre de server
+        javax.net
+             .ssl
+             .HttpsURLConnection
+             .setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
 
-      			public boolean verify(String hostname,
-             			javax.net.ssl.SSLSession sslSession) {
-          			return true;
-      			}
-  		});        
-        SampleServiceService ejemplo = new SampleServiceService(new URL("https://localhost:7002/mvnjaxws-0.0.1-SNAPSHOT/SampleServiceService?WSDL"));
-        String respuesta = ejemplo.getSampleServicePort().sayHello("Sol");
-        System.out.println("Respuesta:"+respuesta);
+                public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+                    return true;
+                }
+            });
+
+        //SampleServiceService ejemplo = new SampleServiceService(new URL("https://localhost:7002/mvnjaxws-0.0.1-SNAPSHOT/SampleServiceService?WSDL"));
+        //String respuesta = ejemplo.getSampleServicePort().sayHello("Sol");
+        //System.out.println("Respuesta:"+respuesta);
     }
 }
