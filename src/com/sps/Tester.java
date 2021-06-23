@@ -28,14 +28,15 @@ public class Tester {
 
     public static void main(String[] args) throws Exception {
 
-        // Primero cargamos el Keystore de Windows
-        KeyStore truststore = KeyStore.getInstance("Windows-MY");
-        //KeyStore truststore = KeyStore.getInstance("WINDOWS-ROOT");
+        // Primero cargamos el Truststore de Windows
+        //KeyStore truststore = KeyStore.getInstance("Windows-MY");
+        KeyStore truststore = KeyStore.getInstance("WINDOWS-ROOT");
         truststore.load(null, null);
 
+        // Cargamos el Keystore donde se tiene el certificado del cliente
         KeyStore keystore;
-        keystore = KeyStore.getInstance("WINDOWS-ROOT");
-        //keystore = KeyStore.getInstance("Windows-MY");
+        //keystore = KeyStore.getInstance("WINDOWS-ROOT");
+        keystore = KeyStore.getInstance("Windows-MY");
         keystore.load(null, null);
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(keystore, null);
@@ -67,7 +68,7 @@ public class Tester {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(truststore);
 
-        // Establecemos la conexi�n TLS hacia el servicio
+        // Establecemos la conexiï¿½n TLS hacia el servicio
         SSLContext context = SSLContext.getInstance("TLS");
         TrustManager[] trustManagers = tmf.getTrustManagers();
         context.init(keyManagers, trustManagers, null);
