@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -27,15 +29,23 @@ public class Tester {
     public static void main(String[] args) throws Exception {
 
         // Primero cargamos el Keystore de Windows
-        //KeyStore ks = KeyStore.getInstance("Windows-MY");
-        KeyStore ks = KeyStore.getInstance("WINDOWS-ROOT");
-        ks.load(null, null);
+        KeyStore truststore = KeyStore.getInstance("Windows-MY");
+        //KeyStore truststore = KeyStore.getInstance("WINDOWS-ROOT");
+        truststore.load(null, null);
+
+        KeyStore keystore;
+        keystore = KeyStore.getInstance("WINDOWS-ROOT");
+        //keystore = KeyStore.getInstance("Windows-MY");
+        keystore.load(null, null);
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keystore, null);
+        KeyManager[] keyManagers = kmf.getKeyManagers();
 
         //Listamos lo que haya en el keystore
-        Enumeration en = ks.aliases();
+        Enumeration en = truststore.aliases();
         while (en.hasMoreElements()) {
             String aliasKey = (String) en.nextElement();
-            Certificate c = ks.getCertificate(aliasKey);
+            Certificate c = truststore.getCertificate(aliasKey);
             System.out.println("---> alias : " + aliasKey);
             Date certExpiryDate = ((X509Certificate) c).getNotAfter();
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");            
@@ -44,8 +54,8 @@ public class Tester {
             long expiresIn = dateDiff / (24 * 60 * 60 * 1000);
             System.out.println("\t\t\t Fecha de expiracion:" + ft.format(certExpiryDate) +  "\tExpira en: " + expiresIn +" Dias");
 
-            if (ks.isKeyEntry(aliasKey)) {
-                Certificate[] chain = ks.getCertificateChain(aliasKey);
+            if (truststore.isKeyEntry(aliasKey)) {
+                Certificate[] chain = truststore.getCertificateChain(aliasKey);
                 System.out.println("---> tamano de la cadena: " + chain.length);
                 for (Certificate cert : chain) {
                     System.out.println(cert);
@@ -55,12 +65,12 @@ public class Tester {
 
         // Le decimos a la clase que use el keystore cargado
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(ks);
+        tmf.init(truststore);
 
         // Establecemos la conexi�n TLS hacia el servicio
         SSLContext context = SSLContext.getInstance("TLS");
         TrustManager[] trustManagers = tmf.getTrustManagers();
-        context.init(null, trustManagers, null);
+        context.init(keyManagers, trustManagers, null);
         SSLSocketFactory sf = context.getSocketFactory();
         //URL url = new URL("https://www.google.com");
         URL url = new URL("https://www.facebook.com");
